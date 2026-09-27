@@ -1,22 +1,21 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { t } from "@/i18n";
-import { buttonVariants } from "@/components/ui/button";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { AuthForm } from "@/components/auth-form";
+import { AuthShell } from "@/components/auth-shell";
+import { getCurrentUser } from "@/lib/auth";
 
-// Placeholder honesto até a Fase 2 (cadastro e login).
-export default function SignupPage() {
+export default async function SignupPage({ searchParams }: PageProps<"/signup">) {
+  if (await getCurrentUser()) redirect("/profile");
+  const { role } = await searchParams;
   return (
-    <>
-      <SiteHeader />
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-start justify-center gap-4 px-4 py-20 sm:px-6">
-        <h1 className="text-3xl font-semibold tracking-tight">{t.comingSoon.title}</h1>
-        <p className="text-lg text-muted-foreground">{t.comingSoon.body}</p>
-        <Link href="/" className={buttonVariants({ variant: "outline" })}>
-          {t.comingSoon.back}
-        </Link>
-      </main>
-      <SiteFooter />
-    </>
+    <AuthShell
+      title={t.auth.signupTitle}
+      subtitle={t.auth.signupSubtitle}
+      switchText={t.auth.haveAccount}
+      switchHref="/login"
+      switchLabel={t.auth.goLogin}
+    >
+      <AuthForm mode="signup" defaultRole={role === "employer" ? "employer" : "candidate"} />
+    </AuthShell>
   );
 }
