@@ -29,3 +29,10 @@ export const MAX_JOB_AREAS = 3;
 export function isOneOf<T extends readonly string[]>(list: T, value: unknown): value is T[number] {
   return typeof value === "string" && (list as readonly string[]).includes(value);
 }
+
+export const JOB_VISA_INFO = ["stamp_2_ok", "work_permit_required", "eu_only", "not_informed"] as const;
+export const SALARY_PERIODS = ["hour", "week", "month", "year"] as const;
+export const PPSN_ANSWERS = ["yes", "no", "unknown"] as const;
+
+/** Salário mínimo nacional da Irlanda, 20+ anos, desde 1 jan 2026 (citizensinformation.ie). */
+export const IRISH_MIN_WAGE_HOURLY = 14.15;

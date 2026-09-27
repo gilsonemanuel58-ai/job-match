@@ -82,7 +82,7 @@ export async function getJob(id: string): Promise<JobDetail | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("jobs")
-    .select(`${SUMMARY_COLUMNS}, description, requirements, hours_per_week, posted_at, companies(description, website)`)
+    .select(`${SUMMARY_COLUMNS}, description, requirements, hours_per_week, posted_at, status, companies(description, website)`)
     .eq("id", id)
     .maybeSingle();
   if (error) console.error("getJob failed", error.code, error.message);
@@ -96,5 +96,6 @@ export async function getJob(id: string): Promise<JobDetail | null> {
     postedAt: data.posted_at,
     companyDescription: company?.description ?? null,
     companyWebsite: company?.website ?? null,
+    status: data.status,
   };
 }

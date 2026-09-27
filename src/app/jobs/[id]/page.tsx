@@ -5,7 +5,10 @@ import { ArrowLeft, Clock, ExternalLink, Info, MapPin } from "lucide-react";
 import { t } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { getJob } from "@/lib/jobs";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentRole, getCurrentUser } from "@/lib/auth";
+import { getMyApplicationFor } from "@/lib/applications";
+import { StatusBadge } from "@/components/status-badge";
+import { ApplyForm } from "@/components/apply-panel";
 import { formatSalary, formatSchedule } from "@/lib/format";
 import { buttonVariants } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
@@ -32,6 +35,9 @@ export default async function JobPage({ params }: PageProps<"/jobs/[id]">) {
   const job = await getJob((await params).id);
   if (!job) notFound();
   const user = await getCurrentUser();
+  const role = await getCurrentRole();
+  const myApplication = user && role === "candidate" ? await getMyApplicationFor(job.id, user.id) : null;
+  const isOpen = job.status === "open";
 
   const salary = formatSalary(job);
   const schedule = formatSchedule(job);
@@ -154,16 +160,31 @@ export default async function JobPage({ params }: PageProps<"/jobs/[id]">) {
               </a>
               <p className="text-xs text-muted-foreground">{d.externalNote}</p>
             </>
-          ) : user ? (
-            <>
-              <button type="button" disabled className={buttonVariants({ size: "lg" })}>
-                {d.applyNative}
-              </button>
-              <p className="text-sm text-muted-foreground">{d.applySoon}</p>
-            </>
-          ) : (
+          ) : myApplication ? (
+            <div className="flex flex-col gap-3">
+              <StatusBadge status={myApplication.status} />
+              <p className="text-sm text-muted-foreground">
+                {t.applications.appliedOn(
+                  new Intl.DateTimeFormat("en-IE", { day: "numeric", month: "long" }).format(new Date(myApplication.createdAt))
+                )}
+              </p>
+              <Link href="/applications" className={buttonVariants({ variant: "outline" })}>
+                {t.applications.viewMine}
+              </Link>
+            </div>
+          ) : !isOpen ? (
+            <p className="text-sm text-muted-foreground">{t.applications.closedJob}</p>
+          ) : !user ? (
             <Link href="/signup" className={buttonVariants({ size: "lg" })}>
               {d.signUpToApply}
+            </Link>
+          ) : role === "employer" ? (
+            <p className="text-sm text-muted-foreground">{t.applications.employerCantApply}</p>
+          ) : role === "candidate" ? (
+            <ApplyForm jobId={job.id} isDemo={job.isDemo} />
+          ) : (
+            <Link href="/onboarding" className={buttonVariants({ size: "lg" })}>
+              {t.applications.finishProfile}
             </Link>
           )}
         </aside>

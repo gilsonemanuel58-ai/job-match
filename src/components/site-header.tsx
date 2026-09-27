@@ -2,10 +2,11 @@ import Link from "next/link";
 import { t } from "@/i18n";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentRole, getCurrentUser } from "@/lib/auth";
 
 export async function SiteHeader() {
   const user = await getCurrentUser();
+  const role = user ? await getCurrentRole() : null;
 
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-card/95 backdrop-blur">
@@ -17,12 +18,22 @@ export async function SiteHeader() {
           <Link href="/jobs" className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
             {t.nav.jobs}
           </Link>
-          <Link href="/#how" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground lg:block">
+          {role === "candidate" && (
+            <Link href="/applications" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:block">
+              {t.nav.applications}
+            </Link>
+          )}
+          {role === "employer" && (
+            <Link href="/employer" className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+              {t.nav.dashboard}
+            </Link>
+          )}
+          {!user && <Link href="/#how" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground lg:block">
             {t.nav.howItWorks}
-          </Link>
-          <Link href="/#employers" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:block">
+          </Link>}
+          {!user && <Link href="/#employers" className="hidden rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:block">
             {t.nav.employers}
-          </Link>
+          </Link>}
           <Link href={user ? "/profile" : "/login"} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "h-10")}>
             {user ? t.nav.myProfile : t.nav.signIn}
           </Link>

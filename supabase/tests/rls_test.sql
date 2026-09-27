@@ -4,7 +4,7 @@
 \set e1 'eeeeeeee-1111-1111-1111-111111111111'
 \set e2 'eeeeeeee-2222-2222-2222-222222222222'
 
-insert into auth.users values (:'c1'),(:'c2'),(:'e1'),(:'e2');
+insert into auth.users (id, email) values (:'c1','c1@test.local'),(:'c2','c2@test.local'),(:'e1','e1@test.local'),(:'e2','e2@test.local');
 
 create or replace function t(label text, ok boolean) returns void language plpgsql as $$
 begin raise notice '% %', case when ok then 'PASS' else 'FAIL' end, label; end $$;
@@ -103,3 +103,23 @@ set role authenticated;
 select set_config('request.jwt.claim.sub', :'c1', false);
 select t('não aceita candidatura interna em vaga externa',
   expect_error($$insert into applications (job_id, candidate_id) select id, '11111111-1111-1111-1111-111111111111' from jobs where source='careerjet'$$));
+
+-- ===== Fase 4 =====
+reset role;
+select t('e-mail do perfil vem da conta', (select email from profiles where id = '11111111-1111-1111-1111-111111111111') = 'c1@test.local');
+set role authenticated;
+select set_config('request.jwt.claim.sub', :'c1', false);
+update profiles set email = 'hacker@evil.test' where id = :'c1';
+select t('candidato não troca o e-mail do perfil', (select email from profiles where id = :'c1') = 'c1@test.local');
+select set_config('request.jwt.claim.sub', :'e1', false);
+select t('empresa vê e-mail de quem se candidatou', (select email from profiles where id = '11111111-1111-1111-1111-111111111111') = 'c1@test.local');
+select t('empresa não cria vaga marcada como demo',
+  expect_error($$insert into jobs (source, company_id, company_name, title, region, is_demo) values ('native','c0000000-0000-0000-0000-000000000001','Demo Café','Fake','cork', true)$$));
+select t('empresa fecha a própria vaga',
+  not expect_error($$update jobs set status = 'closed' where id = '10000000-0000-0000-0000-000000000001'$$));
+select set_config('request.jwt.claim.sub', :'e2', false);
+select t('outra empresa não vê e-mail do candidato', (select count(*) from profiles where id = '11111111-1111-1111-1111-111111111111') = 0);
+select set_config('request.jwt.claim.sub', :'c1', false);
+select t('candidato ainda vê vaga fechada em que se candidatou', (select count(*) from jobs where id = '10000000-0000-0000-0000-000000000001') = 1);
+select set_config('request.jwt.claim.sub', :'c2', false);
+select t('outro candidato não vê a vaga fechada', (select count(*) from jobs where id = '10000000-0000-0000-0000-000000000001') = 0);

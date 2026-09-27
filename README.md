@@ -33,7 +33,7 @@ jobs, only the employer can change an application's status, etc.).
 1. ✅ Project setup, database schema, security rules
 2. ✅ Passwordless sign-up (email link), onboarding for candidates and employers, profile
 3. ✅ Jobs list with search and filters, job detail with visa / English / PPSN and Stamp 2 hours check (demo data clearly labelled)
-4. Applications and employer dashboard
+4. ✅ One-tap applications with status tracking; employer dashboard to post jobs (minimum wage enforced), review applicants and update status
 5. Careerjet import, visa/English signal detection, matching
 
 ## Running locally

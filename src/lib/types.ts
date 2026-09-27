@@ -38,6 +38,7 @@ export interface JobDetail extends JobSummary {
   postedAt: string | null;
   companyDescription: string | null;
   companyWebsite: string | null;
+  status: "open" | "closed";
 }
 
 /** Resultado do match. `null` quando o usuário ainda não tem perfil. */

@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /** Páginas que exigem login. */
-const PROTECTED_PREFIXES = ["/onboarding", "/profile"];
+const PROTECTED_PREFIXES = ["/onboarding", "/profile", "/applications", "/employer"];
 
 /**
  * Renova a sessão do Supabase a cada requisição (o token expira)

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useFocusFirstError } from "@/components/use-focus-first-error";
 import { saveCandidate, type SaveState } from "@/app/onboarding/actions";
 import { t } from "@/i18n";
 import { EMPLOYMENT_TYPES, ENGLISH_LEVELS, JOB_AREAS, REGIONS, SHIFTS, VISA_STATUSES } from "@/lib/options";
@@ -17,8 +18,10 @@ export function CandidateForm({ initial }: { initial: RawValues }) {
   const v = state.values ?? initial;
   const e = state.errors ?? {};
 
+  const formRef = useFocusFirstError(state, Boolean(state.formError || Object.keys(e).length));
+
   return (
-    <form action={action} key={JSON.stringify(v)} noValidate className="flex flex-col gap-8">
+    <form ref={formRef} action={action} key={JSON.stringify(v)} noValidate className="flex flex-col gap-8">
       {(state.formError || Object.keys(e).length > 0) && (
         <p role="alert" className="rounded-md bg-warning-soft px-4 py-3 text-sm font-medium text-warning">
           {state.formError ? o.errors.save : o.errors.summary}

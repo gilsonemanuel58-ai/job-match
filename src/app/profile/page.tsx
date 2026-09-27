@@ -64,12 +64,21 @@ export default async function ProfilePage() {
       </dl>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        {profile.role === "candidate" && (
-          <Link href="/jobs" className={buttonVariants({ size: "lg" })}>
-            {t.profile.browseJobs}
+        {profile.role === "candidate" ? (
+          <>
+            <Link href="/jobs" className={buttonVariants({ size: "lg" })}>
+              {t.profile.browseJobs}
+            </Link>
+            <Link href="/applications" className={buttonVariants({ size: "lg", variant: "outline" })}>
+              {t.profile.myApplications}
+            </Link>
+          </>
+        ) : (
+          <Link href="/employer" className={buttonVariants({ size: "lg" })}>
+            {t.profile.goDashboard}
           </Link>
         )}
-        <Link href="/profile/edit" className={buttonVariants({ size: "lg", variant: profile.role === "candidate" ? "outline" : "default" })}>
+        <Link href="/profile/edit" className={buttonVariants({ size: "lg", variant: "outline" })}>
           {t.profile.edit}
         </Link>
         <form action={signOut}>
