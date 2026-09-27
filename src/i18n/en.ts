@@ -248,6 +248,25 @@ export const en = {
     completeProfile: "Create a profile to see how each job fits you.",
   },
 
+  careerjet: {
+    title: (city: string) => `More jobs in ${city} from Careerjet`,
+    note: "Real listings from Careerjet, a job search engine. Job Match hasn't checked the visa, English or PPSN details for these — read the original ad before applying.",
+    searchTerm: {
+      hospitality: "hospitality",
+      retail: "retail assistant",
+      cleaning: "cleaner",
+      warehouse: "warehouse operative",
+      food_production: "food production operative",
+      delivery: "delivery driver",
+      care: "healthcare assistant",
+      construction: "general operative construction",
+      office: "office administrator",
+      other: "part time",
+    },
+    defaultSearch: "part time",
+    cities: { dublin_city: "Dublin", dublin_county: "Dublin", cork: "Cork", limerick: "Limerick" },
+  },
+
   jobs: {
     title: "Jobs",
     subtitle: "Part-time and entry-level work in Dublin, Cork and Limerick.",

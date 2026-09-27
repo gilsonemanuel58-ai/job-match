@@ -35,7 +35,13 @@ jobs, only the employer can change an application's status, etc.).
 3. ✅ Jobs list with search and filters, job detail with visa / English / PPSN and Stamp 2 hours check (demo data clearly labelled)
 4. ✅ One-tap applications with status tracking; employer dashboard to post jobs (minimum wage enforced), review applicants and update status
 5. ✅ Transparent matching: score, reasons and warnings (Stamp 2 hours, visa, English level) — `npm test`
-6. Careerjet import (Ireland only) with visa/English signal detection
+6. ✅ Real listings from Careerjet (official publisher JobBox widget), filtered by the user's city and type of work
+
+### Why a widget and not the Careerjet API
+The Careerjet search API requires every call to come from a declared server IP and to carry the end user's IP and user agent.
+Netlify's free plan has no static outbound IP, so the API can't be used without a paid static-IP proxy.
+The official widget runs in the visitor's browser and is the compliant, zero-cost option. Trade-off: those listings
+can't be scored or checked for visa/English details, and the page says so.
 
 ## Running locally
 ```bash

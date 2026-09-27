@@ -9,6 +9,9 @@ import { getCurrentUser } from "@/lib/auth";
 import { buttonVariants } from "@/components/ui/button";
 import { JobCard } from "@/components/job-card";
 import { JobFiltersForm } from "@/components/job-filters";
+import { CareerjetJobBox } from "@/components/careerjet-jobbox";
+import type { JobArea } from "@/lib/options";
+import type { Region } from "@/lib/types";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
@@ -23,6 +26,12 @@ export default async function JobsPage({ searchParams }: PageProps<"/jobs">) {
   const matches = new Map<string, Match>();
   if (candidate) for (const j of raw) matches.set(j.id, computeMatch(candidate, j));
   const jobs = candidate ? sortByMatch(raw, (j) => matches.get(j.id)!) : raw;
+
+  // Vagas reais do Careerjet: cidade do filtro > cidade do perfil > Dublin; área do filtro > primeira área do perfil.
+  const cjRegion = (filters.region ?? candidate?.region ?? "dublin_city") as Region;
+  const cjArea = (filters.area ?? candidate?.jobAreas[0]) as JobArea | undefined;
+  const cjCity = t.careerjet.cities[cjRegion];
+  const cjSearch = cjArea ? t.careerjet.searchTerm[cjArea] : t.careerjet.defaultSearch;
 
   return (
     <>
@@ -77,6 +86,16 @@ export default async function JobsPage({ searchParams }: PageProps<"/jobs">) {
             </ul>
           </>
         )}
+
+        <section aria-labelledby="careerjet" className="flex flex-col gap-3 border-t border-border pt-8">
+          <h2 id="careerjet" className="text-xl font-semibold">
+            {t.careerjet.title(cjCity)}
+          </h2>
+          <p className="max-w-3xl text-sm text-muted-foreground">{t.careerjet.note}</p>
+          <div className="rounded-md border border-border bg-card p-2">
+            <CareerjetJobBox search={cjSearch} location={cjCity} />
+          </div>
+        </section>
       </main>
       <SiteFooter />
     </>
