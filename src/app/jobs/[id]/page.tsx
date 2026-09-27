@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Clock, ExternalLink, Info, MapPin } from "lucide-react";
+import { ArrowLeft, Check, Clock, ExternalLink, Info, MapPin, TriangleAlert } from "lucide-react";
+import { getMatchCandidate } from "@/lib/candidate";
+import { computeMatch, STAMP2_TERM_HOURS } from "@/lib/match";
 import { t } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { getJob } from "@/lib/jobs";
@@ -15,7 +17,6 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 const d = t.jobs.detail;
-const STAMP2_TERM_HOURS = 20; // irishimmigration.ie — horas por semana durante as aulas
 
 export async function generateMetadata({ params }: PageProps<"/jobs/[id]">): Promise<Metadata> {
   const job = await getJob((await params).id);
@@ -38,6 +39,8 @@ export default async function JobPage({ params }: PageProps<"/jobs/[id]">) {
   const role = await getCurrentRole();
   const myApplication = user && role === "candidate" ? await getMyApplicationFor(job.id, user.id) : null;
   const isOpen = job.status === "open";
+  const candidate = await getMatchCandidate();
+  const match = candidate ? computeMatch(candidate, job) : null;
 
   const salary = formatSalary(job);
   const schedule = formatSchedule(job);
@@ -92,6 +95,45 @@ export default async function JobPage({ params }: PageProps<"/jobs/[id]">) {
               {schedule && <span className="text-base font-normal text-muted-foreground"> · {schedule}</span>}
             </p>
           </header>
+
+          {match && (
+            <section aria-labelledby="fit" className="flex flex-col gap-3 rounded-md border border-border bg-card p-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h2 id="fit" className="text-xl font-semibold">
+                  {t.match.fitsTitle}
+                </h2>
+                <span
+                  className={cn(
+                    "rounded-sm px-2.5 py-1 text-sm font-bold",
+                    match.blocked ? "bg-warning-soft text-warning" : match.score >= 70 ? "bg-success-soft text-success" : "bg-muted"
+                  )}
+                >
+                  {match.blocked ? t.match.notAFit : t.match.score(match.score)}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">{t.match.fitsIntro}</p>
+              {match.reasons.length > 0 && (
+                <ul className="flex flex-wrap gap-x-4 gap-y-1.5 text-[15px]">
+                  {match.reasons.map((r) => (
+                    <li key={r} className="flex items-center gap-1.5">
+                      <Check aria-hidden className="size-4 text-success" />
+                      {t.match.reasons[r]}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {match.warnings.length > 0 && (
+                <ul className="flex flex-col gap-2 rounded-md bg-warning-soft p-3 text-sm text-warning">
+                  {match.warnings.map((w) => (
+                    <li key={w} className="flex gap-2">
+                      <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
+                      {t.match.warnings[w]}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          )}
 
           <section aria-labelledby="immigrant" className="flex flex-col gap-3">
             <h2 id="immigrant" className="text-xl font-semibold">

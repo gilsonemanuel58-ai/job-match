@@ -28,21 +28,16 @@ export interface JobSummary {
   requiresPpsn: boolean | null;
   externalUrl: string | null;
   isDemo: boolean;
+  hoursPerWeek: number | null;
 }
 
 /** Vaga completa, para a página de detalhe. */
 export interface JobDetail extends JobSummary {
   description: string;
   requirements: string | null;
-  hoursPerWeek: number | null;
   postedAt: string | null;
   companyDescription: string | null;
   companyWebsite: string | null;
   status: "open" | "closed";
 }
 
-/** Resultado do match. `null` quando o usuário ainda não tem perfil. */
-export interface MatchResult {
-  score: number; // 0–100
-  reasons: string[];
-}

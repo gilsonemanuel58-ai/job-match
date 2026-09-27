@@ -3,6 +3,9 @@ import Link from "next/link";
 import { SearchX, TriangleAlert } from "lucide-react";
 import { t } from "@/i18n";
 import { cleanFilters, listJobs } from "@/lib/jobs";
+import { getMatchCandidate } from "@/lib/candidate";
+import { computeMatch, sortByMatch, type Match } from "@/lib/match";
+import { getCurrentUser } from "@/lib/auth";
 import { buttonVariants } from "@/components/ui/button";
 import { JobCard } from "@/components/job-card";
 import { JobFiltersForm } from "@/components/job-filters";
@@ -13,8 +16,13 @@ export const metadata: Metadata = { title: "Jobs — Job Match" };
 
 export default async function JobsPage({ searchParams }: PageProps<"/jobs">) {
   const filters = cleanFilters(await searchParams);
-  const { jobs, error } = await listJobs(filters);
-  const hasDemo = jobs.some((j) => j.isDemo);
+  const [{ jobs: raw, error }, candidate, user] = await Promise.all([listJobs(filters), getMatchCandidate(), getCurrentUser()]);
+  const hasDemo = raw.some((j) => j.isDemo);
+
+  // Candidato com perfil: cada vaga ganha o match e a lista é ordenada por ele.
+  const matches = new Map<string, Match>();
+  if (candidate) for (const j of raw) matches.set(j.id, computeMatch(candidate, j));
+  const jobs = candidate ? sortByMatch(raw, (j) => matches.get(j.id)!) : raw;
 
   return (
     <>
@@ -50,11 +58,20 @@ export default async function JobsPage({ searchParams }: PageProps<"/jobs">) {
           <>
             <p className="text-sm font-medium text-muted-foreground" aria-live="polite">
               {t.jobs.count(jobs.length)}
+              {candidate ? ` · ${t.match.sortedHint}` : ""}
+              {!candidate && !user && (
+                <>
+                  {" · "}
+                  <Link href="/signup" className="text-primary underline-offset-4 hover:underline">
+                    {t.match.completeProfile}
+                  </Link>
+                </>
+              )}
             </p>
             <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {jobs.map((job) => (
                 <li key={job.id} className="flex">
-                  <JobCard job={job} href={`/jobs/${job.id}`} className="w-full" />
+                  <JobCard job={job} match={matches.get(job.id)} href={`/jobs/${job.id}`} className="w-full" />
                 </li>
               ))}
             </ul>

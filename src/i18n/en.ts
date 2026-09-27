@@ -221,6 +221,33 @@ export const en = {
     },
   },
 
+  match: {
+    score: (n: number) => `${n}% match`,
+    notAFit: "Not a fit",
+    fitsTitle: "How this job fits you",
+    fitsIntro: "Based on your profile. The score only helps you sort — you can apply to any job.",
+    whyLabel: "Matches:",
+    reasons: {
+      region: "your area",
+      nearbyRegion: "near your area",
+      area: "your type of work",
+      visa: "your visa",
+      english: "your English",
+      shifts: "your hours",
+      jobType: "full/part-time",
+    },
+    warnings: {
+      visaPermit: "Asks for a work permit. Stamp 2 alone is usually not enough.",
+      visaEuOnly: "Only open to EU/EEA citizens.",
+      visaUnknown: "Doesn't say if Stamp 2 is accepted. Ask before you go.",
+      stamp2Hours: "More than 20 hours a week — with Stamp 2 only allowed in June–September and 15 Dec–15 Jan.",
+      stamp2FullTime: "Full-time without hours listed. With Stamp 2, check it fits the 20-hour limit during term.",
+      englishAbove: "Asks for more English than your profile says.",
+    },
+    sortedHint: "Sorted by how well each job fits your profile.",
+    completeProfile: "Create a profile to see how each job fits you.",
+  },
+
   jobs: {
     title: "Jobs",
     subtitle: "Part-time and entry-level work in Dublin, Cork and Limerick.",

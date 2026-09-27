@@ -34,7 +34,8 @@ jobs, only the employer can change an application's status, etc.).
 2. ✅ Passwordless sign-up (email link), onboarding for candidates and employers, profile
 3. ✅ Jobs list with search and filters, job detail with visa / English / PPSN and Stamp 2 hours check (demo data clearly labelled)
 4. ✅ One-tap applications with status tracking; employer dashboard to post jobs (minimum wage enforced), review applicants and update status
-5. Careerjet import, visa/English signal detection, matching
+5. ✅ Transparent matching: score, reasons and warnings (Stamp 2 hours, visa, English level) — `npm test`
+6. Careerjet import (Ireland only) with visa/English signal detection
 
 ## Running locally
 ```bash

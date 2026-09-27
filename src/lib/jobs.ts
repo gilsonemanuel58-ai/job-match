@@ -4,7 +4,7 @@ import { EMPLOYMENT_TYPES, JOB_AREAS, REGIONS, isOneOf } from "@/lib/options";
 import type { JobDetail, JobSummary } from "@/lib/types";
 
 const SUMMARY_COLUMNS =
-  "id, source, title, company_name, region, area, employment_type, shifts, salary_min, salary_max, salary_period, visa_info, visa_signal, english_required, requires_ppsn, external_url, is_demo";
+  "id, source, title, company_name, region, area, employment_type, shifts, salary_min, salary_max, salary_period, visa_info, visa_signal, english_required, requires_ppsn, external_url, is_demo, hours_per_week";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = Record<string, any>;
@@ -28,6 +28,7 @@ function toSummary(r: Row): JobSummary {
     requiresPpsn: r.requires_ppsn,
     externalUrl: r.external_url,
     isDemo: r.is_demo,
+    hoursPerWeek: r.hours_per_week ?? null,
   };
 }
 
@@ -82,7 +83,7 @@ export async function getJob(id: string): Promise<JobDetail | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("jobs")
-    .select(`${SUMMARY_COLUMNS}, description, requirements, hours_per_week, posted_at, status, companies(description, website)`)
+    .select(`${SUMMARY_COLUMNS}, description, requirements, posted_at, status, companies(description, website)`)
     .eq("id", id)
     .maybeSingle();
   if (error) console.error("getJob failed", error.code, error.message);
@@ -92,7 +93,6 @@ export async function getJob(id: string): Promise<JobDetail | null> {
     ...toSummary(data),
     description: data.description ?? "",
     requirements: data.requirements,
-    hoursPerWeek: data.hours_per_week,
     postedAt: data.posted_at,
     companyDescription: company?.description ?? null,
     companyWebsite: company?.website ?? null,

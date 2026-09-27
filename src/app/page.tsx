@@ -29,6 +29,7 @@ const exampleJob: JobSummary = {
   requiresPpsn: null,
   externalUrl: null,
   isDemo: true,
+  hoursPerWeek: 20,
 };
 
 const clarityIcons = [BadgeCheck, Languages, FileText];
@@ -79,7 +80,7 @@ export default function Home() {
             <div className="mx-auto w-full max-w-md lg:mx-0">
               <JobCard
                 job={exampleJob}
-                match={{ score: 92, reasons: ["your area", "your hours", "your visa"] }}
+                match={{ score: 85, reasons: ["region", "area", "visa", "shifts"], warnings: [], blocked: false }}
                 href="/signup"
                 label={t.job.example}
                 className="shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)]"

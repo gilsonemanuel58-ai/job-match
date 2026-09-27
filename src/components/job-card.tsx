@@ -2,12 +2,15 @@ import Link from "next/link";
 import { t } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { formatSalary, formatSchedule } from "@/lib/format";
-import type { JobSummary, MatchResult } from "@/lib/types";
+import { TriangleAlert } from "lucide-react";
+import type { JobSummary } from "@/lib/types";
+import type { Match } from "@/lib/match";
 import { buttonVariants } from "@/components/ui/button";
 
 interface JobCardProps {
   job: JobSummary;
-  match?: MatchResult | null;
+  /** Match com o perfil do candidato logado. */
+  match?: Match | null;
   /** Destino do botão. Vagas externas usam o link original. */
   href: string;
   /** Rótulo extra, ex.: "Example" na landing page. */
@@ -59,7 +62,7 @@ export function JobCard({ job, match, href, label, className }: JobCardProps) {
   const note = job.visaInfo === "not_informed" && job.visaSignal
     ? t.job.visaSignalNote(job.visaSignal)
     : match?.reasons.length
-      ? `${t.job.why} ${match.reasons.join(", ")}`
+      ? `${t.match.whyLabel} ${match.reasons.map((r) => t.match.reasons[r]).join(", ")}`
       : null;
 
   return (
@@ -75,10 +78,14 @@ export function JobCard({ job, match, href, label, className }: JobCardProps) {
           <span
             className={cn(
               "shrink-0 rounded-sm px-2.5 py-1 text-[13px] font-bold",
-              match.score >= 85 ? "bg-success-soft text-success" : "bg-muted text-foreground"
+              match.blocked
+                ? "bg-warning-soft text-warning"
+                : match.score >= 70
+                  ? "bg-success-soft text-success"
+                  : "bg-muted text-foreground"
             )}
           >
-            {t.job.match(match.score)}
+            {match.blocked ? t.match.notAFit : t.match.score(match.score)}
           </span>
         )}
       </div>
@@ -95,6 +102,17 @@ export function JobCard({ job, match, href, label, className }: JobCardProps) {
       </dl>
 
       {note && <p className="border-t border-border pt-2.5 text-xs text-muted-foreground">{note}</p>}
+
+      {match && match.warnings.length > 0 && (
+        <ul className="flex flex-col gap-1.5 rounded-md bg-warning-soft px-3 py-2 text-xs text-warning">
+          {match.warnings.map((w) => (
+            <li key={w} className="flex gap-1.5">
+              <TriangleAlert aria-hidden className="mt-px size-3.5 shrink-0" />
+              {t.match.warnings[w]}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="flex items-center gap-2">
         <Link
