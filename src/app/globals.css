@@ -1,51 +1,38 @@
 @import "tailwindcss";
 
 /*
- * Job Match — design tokens (PROVISÓRIOS)
- * A paleta final será definida depois da aprovação das referências visuais.
+ * Job Match — design tokens (Direção A · Cívico e confiável)
  * Regra: cada cor tem uma função. Nada de cor só para decorar.
+ * MVP: só tema claro. Tema escuro é FUTURE FEATURE.
  */
 :root {
-  --background: oklch(0.99 0.002 250);
-  --foreground: oklch(0.2 0.02 255);
-  --card: oklch(1 0 0);
-  --card-foreground: var(--foreground);
-  --muted: oklch(0.96 0.005 250);
-  --muted-foreground: oklch(0.5 0.02 255);
-  --border: oklch(0.91 0.008 250);
-  --input: oklch(0.88 0.01 250);
-  --ring: oklch(0.55 0.15 255);
+  --background: #f6f8fa;       /* fundo das páginas */
+  --foreground: #0e1b2c;       /* texto principal */
+  --card: #ffffff;             /* superfícies (cards, formulários) */
+  --card-foreground: #0e1b2c;
+  --muted: #eef2f6;            /* fundos neutros secundários */
+  --muted-foreground: #4a5868; /* texto secundário (contraste 7:1 no branco) */
+  --border: #dce3ea;
+  --input: #c5d0db;
+  --ring: #0b5cad;
 
-  /* primary = ação principal (CTA, links) */
-  --primary: oklch(0.45 0.16 255);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.95 0.02 255);
-  --secondary-foreground: oklch(0.3 0.08 255);
+  --navy: #0e1b2c;             /* blocos de destaque (header, hero) */
+  --navy-foreground: #ffffff;
+  --navy-muted: #c9d3de;       /* texto secundário sobre navy */
 
-  /* estados */
-  --success: oklch(0.55 0.14 150);   /* match alto, hired */
-  --warning: oklch(0.78 0.15 80);    /* "não informado", atenção */
-  --warning-foreground: oklch(0.4 0.09 60);
-  --destructive: oklch(0.55 0.2 27); /* erro, rejected */
+  --primary: #0b5cad;          /* ação principal: CTA e links */
+  --primary-hover: #084784;
+  --primary-foreground: #ffffff;
+  --secondary: #e8f0f9;
+  --secondary-foreground: #0b4a8a;
 
-  --radius: 0.625rem;
-}
+  --success: #1e6b45;          /* compatível: visto aceito, match alto, hired */
+  --success-soft: #e6f2eb;
+  --warning: #7a4a00;          /* "não informado", atenção */
+  --warning-soft: #fff4db;
+  --destructive: #b42318;      /* erro, rejected */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: oklch(0.17 0.015 255);
-    --foreground: oklch(0.95 0.005 250);
-    --card: oklch(0.21 0.015 255);
-    --muted: oklch(0.25 0.015 255);
-    --muted-foreground: oklch(0.7 0.02 255);
-    --border: oklch(0.3 0.015 255);
-    --input: oklch(0.34 0.015 255);
-    --primary: oklch(0.7 0.14 255);
-    --primary-foreground: oklch(0.17 0.015 255);
-    --secondary: oklch(0.28 0.03 255);
-    --secondary-foreground: oklch(0.9 0.03 255);
-    --warning-foreground: oklch(0.85 0.12 80);
-  }
+  --radius: 0.5rem;
 }
 
 @theme inline {
@@ -58,19 +45,27 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-navy: var(--navy);
+  --color-navy-foreground: var(--navy-foreground);
+  --color-navy-muted: var(--navy-muted);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
-  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
   --color-destructive: var(--destructive);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
