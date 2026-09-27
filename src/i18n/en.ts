@@ -270,7 +270,7 @@ export const en = {
   jobs: {
     title: "Jobs",
     subtitle: "Part-time and entry-level work in Dublin, Cork and Limerick.",
-    demoNotice: "These are demo listings to show how Job Match works. Real jobs arrive soon.",
+    demoNotice: "The listings below are demos that show how Job Match works. Real jobs from Careerjet are further down the page.",
     searchLabel: "Search",
     searchPlaceholder: "Role or business, e.g. barista",
     regionLabel: "Area",
