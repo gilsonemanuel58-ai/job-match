@@ -64,7 +64,12 @@ export default async function ProfilePage() {
       </dl>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Link href="/profile/edit" className={buttonVariants({ size: "lg" })}>
+        {profile.role === "candidate" && (
+          <Link href="/jobs" className={buttonVariants({ size: "lg" })}>
+            {t.profile.browseJobs}
+          </Link>
+        )}
+        <Link href="/profile/edit" className={buttonVariants({ size: "lg", variant: profile.role === "candidate" ? "outline" : "default" })}>
           {t.profile.edit}
         </Link>
         <form action={signOut}>

@@ -32,7 +32,7 @@ jobs, only the employer can change an application's status, etc.).
 ## Roadmap
 1. ✅ Project setup, database schema, security rules
 2. ✅ Passwordless sign-up (email link), onboarding for candidates and employers, profile
-3. Native jobs: list, filters, detail (demo data clearly labelled)
+3. ✅ Jobs list with search and filters, job detail with visa / English / PPSN and Stamp 2 hours check (demo data clearly labelled)
 4. Applications and employer dashboard
 5. Careerjet import, visa/English signal detection, matching
 

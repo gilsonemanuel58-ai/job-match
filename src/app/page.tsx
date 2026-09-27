@@ -20,7 +20,7 @@ const exampleJob: JobSummary = {
   area: "hospitality",
   employmentType: "part_time",
   shifts: ["weekend"],
-  salaryMin: 13.5,
+  salaryMin: 14.5,
   salaryMax: null,
   salaryPeriod: "hour",
   visaInfo: "stamp_2_ok",

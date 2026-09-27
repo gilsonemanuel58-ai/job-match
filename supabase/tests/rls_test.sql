@@ -86,7 +86,7 @@ select t('empresa não troca o candidato da candidatura',
 -- ===== visitante =====
 reset role; set role anon;
 select set_config('request.jwt.claim.sub', '', false);
-select t('visitante vê vagas abertas', (select count(*) from jobs) = 1);
+select t('visitante vê vagas abertas', (select count(*) from jobs where not is_demo) = 1);
 select t('visitante não vê candidaturas', (select count(*) from applications) = 0);
 
 -- ===== servidor (importação Careerjet) =====

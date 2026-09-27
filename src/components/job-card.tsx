@@ -36,7 +36,8 @@ function Fact({ label, value, tone }: { label: string; value: string; tone?: "go
 export function JobCard({ job, match, href, label, className }: JobCardProps) {
   const salary = formatSalary(job);
   const schedule = formatSchedule(job);
-  const isExternal = job.source === "careerjet";
+  // Link para fora do site (ex.: anúncio original no Careerjet) abre em nova aba.
+  const isExternal = /^https?:\/\//.test(href);
 
   // Visto: vaga nativa informa diretamente; externa só tem "indício no anúncio".
   const visa =
